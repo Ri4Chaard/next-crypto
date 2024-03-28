@@ -2,37 +2,36 @@ import { useEffect, useState } from "react";
 import { MainContainer } from "../components/MainContainer";
 import Image from "next/image";
 import Link from "next/link";
+import { useFetching } from "../hooks/useFetching";
 
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
 
     const axios = require("axios");
+    const [fetchTokens, isTokLoading, tokError] = useFetching(async (url) => {
+        const response = await axios.get(url);
+        setTokens(response.data);
+    });
 
     useEffect(() => {
-        axios
-            .get(
-                "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1"
-            )
-            .then((response) => {
-                setTokens(response.data);
-                setIsLoading(false);
-            })
-            .catch((err) => console.log(err));
+        fetchTokens(
+            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1"
+        );
     }, []);
 
     const myLoader = ({ src }) => {
         return src;
     };
-
+    console.log(tokError);
     console.log(tokens);
 
     return (
         <MainContainer>
-            {isLoading ? (
+            {isTokLoading ? (
                 <h1>Loading...</h1>
             ) : (
                 <div>
+                    {tokError && <h2>{tokError.message}</h2>}
                     {tokens.map((token) => (
                         <Link key={token.id} href={`/tokens/${token.id}`}>
                             <div>
