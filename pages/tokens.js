@@ -3,6 +3,7 @@ import { MainContainer } from "../components/MainContainer";
 import Image from "next/image";
 import Link from "next/link";
 import { useFetching } from "../hooks/useFetching";
+import styles from "../styles/menu.module.scss";
 
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
@@ -30,11 +31,15 @@ const Tokens = () => {
             {isTokLoading ? (
                 <h1>Loading...</h1>
             ) : (
-                <div>
+                <div className={styles.tokens}>
                     {tokError && <h2>{tokError.message}</h2>}
                     {tokens.map((token) => (
-                        <Link key={token.id} href={`/tokens/${token.id}`}>
-                            <div>
+                        <Link
+                            key={token.id}
+                            className={styles.tokens__content}
+                            href={`/tokens/${token.id}`}
+                        >
+                            <div className={styles.tokens__token}>
                                 <h2>{token.name}</h2>
                                 <Image
                                     loader={myLoader}

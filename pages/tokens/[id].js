@@ -4,13 +4,16 @@ import { MainContainer } from "../../components/MainContainer";
 import { useFetching } from "../../hooks/useFetching";
 
 export default function () {
-    const [token, setToken] = useState([]);
+    const [token, setToken] = useState();
+    const [err, setErr] = useState("");
 
     const { query } = useRouter();
     const axios = require("axios");
     const [fetchToken, isTokLoading, tokError] = useFetching(async (url) => {
         const response = await axios.get(url);
+        console.log(response);
         setToken(response.data);
+        setErr(tokError.message);
     });
     console.log(query.id);
 
@@ -28,13 +31,48 @@ export default function () {
                 <h1>Loading...</h1>
             ) : (
                 <>
-                    <div>
-                        <h1>{token.name}</h1>
-                        {token.image && <img src={token.image.small} />}
-                    </div>
-                    <h2>{token.symbol}</h2>
-                    {token.tickers && (
-                        <div>Price: ${token.market_data.current_price.usd}</div>
+                    {err && <h2>{err}</h2>}
+                    {token && (
+                        <>
+                            <div>
+                                <div>
+                                    <h1>{token.name}</h1>
+                                    <img src={token.image.small} />
+                                    <h2>{token.symbol}</h2>
+                                </div>
+                                <div>
+                                    <p>
+                                        Current price: $
+                                        {token.market_data.current_price.usd}
+                                    </p>
+                                    <p>
+                                        Price change 24h: $
+                                        {token.market_data.price_change_24h.toFixed(
+                                            2
+                                        )}
+                                    </p>
+                                    <p>
+                                        High 24h: $
+                                        {token.market_data.high_24h.usd}
+                                    </p>
+                                    <p>
+                                        Low 24h: $
+                                        {token.market_data.low_24h.usd}
+                                    </p>
+                                </div>
+                            </div>
+                            <p>{token.description.en}</p>
+
+                            <div>
+                                Homepage:
+                                <a
+                                    href={token.links.homepage[0]}
+                                    target="_blank"
+                                >
+                                    {token.links.homepage[0]}
+                                </a>
+                            </div>
+                        </>
                     )}
                 </>
             )}
