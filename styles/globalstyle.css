@@ -1,4 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
     background-color: #111827;
     color: #fff;
@@ -6,8 +11,8 @@ body {
 }
 
 a {
-    color: #006f83;
+    color: rgb(8 145 178);
 }
 a:visited {
-    color: #006f83;
+    color: rgb(8 145 178);
 }

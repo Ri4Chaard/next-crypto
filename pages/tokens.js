@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useFetching } from "../hooks/useFetching";
 import styles from "../styles/menu.module.scss";
+import { Pagination } from "../components/Pagination";
 
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
@@ -16,7 +17,7 @@ const Tokens = () => {
 
     useEffect(() => {
         fetchTokens(
-            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1"
+            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=6&page=1"
         );
     }, []);
 
@@ -31,29 +32,36 @@ const Tokens = () => {
             {isTokLoading ? (
                 <h1>Loading...</h1>
             ) : (
-                <div className={styles.tokens}>
-                    {tokError && <h2>{tokError.message}</h2>}
-                    {tokens.map((token) => (
-                        <Link
-                            key={token.id}
-                            className={styles.tokens__content}
-                            href={`/tokens/${token.id}`}
-                        >
-                            <div className={styles.tokens__token}>
-                                <h2>{token.name}</h2>
-                                <Image
-                                    loader={myLoader}
-                                    src={token.image}
-                                    width={50}
-                                    height={50}
-                                    alt="not found"
-                                    priority={false}
-                                    unoptimized={true}
-                                />
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                <>
+                    <div className={styles.tokens}>
+                        {tokError && (
+                            <h2 className="flex flex-1 justify-center items-center text-3xl">
+                                {tokError.message}
+                            </h2>
+                        )}
+                        {tokens.map((token) => (
+                            <Link
+                                key={token.id}
+                                className={styles.tokens__content}
+                                href={`/tokens/${token.id}`}
+                            >
+                                <div className={styles.tokens__token}>
+                                    <h2>{token.name}</h2>
+                                    <Image
+                                        loader={myLoader}
+                                        src={token.image}
+                                        width={50}
+                                        height={50}
+                                        alt="not found"
+                                        priority={false}
+                                        unoptimized={true}
+                                    />
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                    <Pagination />
+                </>
             )}
         </MainContainer>
     );

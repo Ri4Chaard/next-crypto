@@ -1,7 +1,9 @@
+$base-color: rgb(8 145 178);
+
 .head {
     display: flex;
     justify-content: space-around;
-    border-bottom: 1px solid #006f83;
+    border-bottom: 1px solid $base-color;
     padding: 10px;
 }
 
@@ -15,7 +17,7 @@
         -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
         width: 50vw;
-        border: 1px solid rgb(0, 111, 131);
+        border: 1px solid $base-color;
         border-radius: 10px;
         padding: 10px;
     }
@@ -34,7 +36,10 @@
 .tokens {
     padding: 10px;
     height: 500px;
-    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    // overflow-y: scroll;
+    justify-content: space-around;
     &__content {
         display: flex;
         justify-content: center;
