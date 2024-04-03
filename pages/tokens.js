@@ -8,18 +8,31 @@ import { Pagination } from "../components/Pagination";
 
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
+    const [page, setPage] = useState(1);
 
     const axios = require("axios");
-    const [fetchTokens, isTokLoading, tokError] = useFetching(async (url) => {
-        const response = await axios.get(url);
-        setTokens(response.data);
-    });
+    const [fetchTokens, isTokLoading, tokError] = useFetching(
+        async (url, params) => {
+            const response = await axios.get(url, params);
+            setTokens(response.data);
+        }
+    );
 
     useEffect(() => {
         fetchTokens(
-            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=6&page=1"
+            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc",
+            {
+                params: {
+                    per_page: 6,
+                    page: page,
+                },
+            }
         );
-    }, []);
+    }, [page]);
+
+    const changePage = (page) => {
+        setPage(page);
+    };
 
     const myLoader = ({ src }) => {
         return src;
@@ -60,7 +73,7 @@ const Tokens = () => {
                             </Link>
                         ))}
                     </div>
-                    <Pagination />
+                    <Pagination curPage={page} changePage={changePage} />
                 </>
             )}
         </MainContainer>
