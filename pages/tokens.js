@@ -5,30 +5,35 @@ import Link from "next/link";
 import { useFetching } from "../hooks/useFetching";
 import styles from "../styles/menu.module.scss";
 import { Pagination } from "../components/Pagination";
+import { getPageCount } from "../hooks/usePagination";
 
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
     const [page, setPage] = useState(1);
+    const [perPage, setPerPage] = useState(6);
+    const [totalPages, setTotalPages] = useState(0);
 
     const axios = require("axios");
     const [fetchTokens, isTokLoading, tokError] = useFetching(
-        async (url, params) => {
-            const response = await axios.get(url, params);
+        async (url, perPage) => {
+            const response = await axios.get(url, {
+                params: {
+                    per_page: perPage,
+                    page: page,
+                },
+            });
             setTokens(response.data);
+            setTotalPages(getPageCount(100, perPage));
         }
     );
 
     useEffect(() => {
         fetchTokens(
             "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc",
-            {
-                params: {
-                    per_page: 6,
-                    page: page,
-                },
-            }
+            // "https://jsonplaceholder.typicode.com/posts",
+            perPage
         );
-    }, [page]);
+    }, [page, perPage]);
 
     const changePage = (page) => {
         setPage(page);
@@ -39,6 +44,7 @@ const Tokens = () => {
     };
     console.log(tokError);
     console.log(tokens);
+    console.log(totalPages);
 
     return (
         <MainContainer>
@@ -73,7 +79,11 @@ const Tokens = () => {
                             </Link>
                         ))}
                     </div>
-                    <Pagination curPage={page} changePage={changePage} />
+                    <Pagination
+                        curPage={page}
+                        changePage={changePage}
+                        totalPages={totalPages}
+                    />
                 </>
             )}
         </MainContainer>
