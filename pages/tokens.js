@@ -10,30 +10,22 @@ import { getPageCount } from "../hooks/usePagination";
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
     const [page, setPage] = useState(1);
-    const [perPage, setPerPage] = useState(6);
+    const [perPage, setPerPage] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
 
     const axios = require("axios");
-    const [fetchTokens, isTokLoading, tokError] = useFetching(
-        async (url, perPage) => {
-            const response = await axios.get(url, {
-                params: {
-                    per_page: perPage,
-                    page: page,
-                },
-            });
-            setTokens(response.data);
-            setTotalPages(getPageCount(100, perPage));
-        }
-    );
+    const [fetchTokens, isTokLoading, tokError] = useFetching(async (url) => {
+        const response = await axios.get(url);
+        setTokens(response.data);
+        setTotalPages(getPageCount(100, perPage));
+    });
 
     useEffect(() => {
         fetchTokens(
             "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc",
-            // "https://jsonplaceholder.typicode.com/posts",
             perPage
         );
-    }, [page, perPage]);
+    }, []);
 
     const changePage = (page) => {
         setPage(page);
@@ -58,26 +50,28 @@ const Tokens = () => {
                                 {tokError.message}
                             </h2>
                         )}
-                        {tokens.map((token) => (
-                            <Link
-                                key={token.id}
-                                className={styles.tokens__content}
-                                href={`/tokens/${token.id}`}
-                            >
-                                <div className={styles.tokens__token}>
-                                    <h2>{token.name}</h2>
-                                    <Image
-                                        loader={myLoader}
-                                        src={token.image}
-                                        width={50}
-                                        height={50}
-                                        alt="not found"
-                                        priority={false}
-                                        unoptimized={true}
-                                    />
-                                </div>
-                            </Link>
-                        ))}
+                        {tokens
+                            .slice(perPage * page - perPage, perPage * page)
+                            .map((token) => (
+                                <Link
+                                    key={token.id}
+                                    className={styles.tokens__content}
+                                    href={`/tokens/${token.id}`}
+                                >
+                                    <div className={styles.tokens__token}>
+                                        <h2>{token.name}</h2>
+                                        <Image
+                                            loader={myLoader}
+                                            src={token.image}
+                                            width={50}
+                                            height={50}
+                                            alt="not found"
+                                            priority={false}
+                                            unoptimized={true}
+                                        />
+                                    </div>
+                                </Link>
+                            ))}
                     </div>
                     <Pagination
                         curPage={page}

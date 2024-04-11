@@ -5,17 +5,13 @@ export const Pagination = ({ curPage, changePage, totalPages }) => {
     let pageArray = usePagination(totalPages, curPage);
     const leftPages = [2, 3, 4];
     const rightPages = [totalPages - 3, totalPages - 2, totalPages - 1];
-    // const pageArray = [
-    //     curPage - 2,
-    //     curPage - 1,
-    //     curPage,
-    //     curPage + 1,
-    //     curPage + 2,
-    // ];
-
-    console.log(pageArray);
-    console.log(leftPages);
-    console.log(rightPages);
+    const pageCenterNums = [
+        curPage - 2,
+        curPage - 1,
+        curPage,
+        curPage + 1,
+        curPage + 2,
+    ];
 
     return (
         <div className="flex items-center justify-between border-t border-cyan-600 px-4 py-3 sm:px-6">
@@ -45,7 +41,7 @@ export const Pagination = ({ curPage, changePage, totalPages }) => {
                                 />
                             </button>
                         </div>
-                        {totalPages >= 10 && (
+                        {totalPages > 10 && (
                             <div
                                 className={`cursor-pointer relative hidden items-center px-4 py-2 text-cyan-600 text-sm font-semibold ring-1 ring-inset ring-cyan-600 hover:bg-cyan-600 hover:text-teal-50 focus:z-20 focus:outline-offset-0 md:inline-flex ${
                                     curPage == 1 && "bg-cyan-600 text-white"
@@ -56,9 +52,10 @@ export const Pagination = ({ curPage, changePage, totalPages }) => {
                             </div>
                         )}
                         {curPage < 4 &&
-                            totalPages >= 10 &&
+                            totalPages > 10 &&
                             leftPages.map((page) => (
                                 <div
+                                    key={page}
                                     className={`cursor-pointer relative hidden items-center px-4 py-2 text-cyan-600 text-sm font-semibold ring-1 ring-inset ring-cyan-600 hover:bg-cyan-600 hover:text-teal-50 focus:z-20 focus:outline-offset-0 md:inline-flex ${
                                         curPage == page &&
                                         "bg-cyan-600 text-white"
@@ -68,14 +65,15 @@ export const Pagination = ({ curPage, changePage, totalPages }) => {
                                     {page}
                                 </div>
                             ))}
-                        {curPage > 4 && totalPages >= 10 && (
+                        {curPage > 4 && totalPages > 10 && (
                             <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-cyan-600 ring-1 ring-inset ring-cyan-600 focus:outline-offset-0">
                                 ...
                             </span>
                         )}
-                        {totalPages < 10 ? (
+                        {totalPages <= 10 ? (
                             pageArray.map((page) => (
                                 <div
+                                    key={page}
                                     className={`cursor-pointer relative hidden items-center px-4 py-2 text-cyan-600 text-sm font-semibold ring-1 ring-inset ring-cyan-600 hover:bg-cyan-600 hover:text-teal-50 focus:z-20 focus:outline-offset-0 md:inline-flex ${
                                         curPage == page &&
                                         "bg-cyan-600 text-white"
@@ -89,8 +87,9 @@ export const Pagination = ({ curPage, changePage, totalPages }) => {
                             <>
                                 {curPage > 3 &&
                                     curPage < totalPages - 2 &&
-                                    pageArray.map((page) => (
+                                    pageCenterNums.map((page) => (
                                         <div
+                                            key={page}
                                             className={`cursor-pointer relative hidden items-center px-4 py-2 text-cyan-600 text-sm font-semibold ring-1 ring-inset ring-cyan-600 hover:bg-cyan-600 hover:text-teal-50 focus:z-20 focus:outline-offset-0 md:inline-flex ${
                                                 curPage == page &&
                                                 "bg-cyan-600 text-white"
@@ -104,9 +103,10 @@ export const Pagination = ({ curPage, changePage, totalPages }) => {
                         )}
 
                         {curPage > totalPages - 3 &&
-                            totalPages >= 10 &&
+                            totalPages > 10 &&
                             rightPages.map((page) => (
                                 <div
+                                    key={page}
                                     className={`cursor-pointer relative hidden items-center px-4 py-2 text-cyan-600 text-sm font-semibold ring-1 ring-inset ring-cyan-600 hover:bg-cyan-600 hover:text-teal-50 focus:z-20 focus:outline-offset-0 md:inline-flex ${
                                         curPage == page &&
                                         "bg-cyan-600 text-white"
@@ -116,12 +116,12 @@ export const Pagination = ({ curPage, changePage, totalPages }) => {
                                     {page}
                                 </div>
                             ))}
-                        {curPage < totalPages - 3 && totalPages >= 10 && (
+                        {curPage < totalPages - 3 && totalPages > 10 && (
                             <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-cyan-600 ring-1 ring-inset ring-cyan-600 focus:outline-offset-0">
                                 ...
                             </span>
                         )}
-                        {totalPages >= 10 && (
+                        {totalPages > 10 && (
                             <div
                                 className={`cursor-pointer relative hidden items-center px-4 py-2 text-cyan-600 text-sm font-semibold ring-1 ring-inset ring-cyan-600 hover:bg-cyan-600 hover:text-teal-50 focus:z-20 focus:outline-offset-0 md:inline-flex ${
                                     curPage == totalPages &&
