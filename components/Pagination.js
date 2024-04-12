@@ -14,7 +14,7 @@ export const Pagination = ({ curPage, changePage, totalPages }) => {
     ];
 
     return (
-        <div className="flex items-center justify-between border-t border-cyan-600 px-4 py-3 sm:px-6">
+        <div className="flex items-center justify-between border rounded-b border-cyan-600 px-4 py-3 sm:px-6">
             <div className="flex flex-1 justify-between sm:hidden">
                 <div className="relative inline-flex items-center rounded-md border border-cyan-600 px-4 py-2 text-sm font-medium text-gray-700 hover:text-teal-50 hover:bg-cyan-600">
                     Previous

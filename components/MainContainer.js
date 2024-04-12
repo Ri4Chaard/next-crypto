@@ -8,9 +8,9 @@ export const MainContainer = ({ children }) => {
             <Head>
                 <title>Crypto app</title>
             </Head>
-            <div className={styles.menu}>
-                <div className={styles.menu__content}>
-                    <header className={styles.head}>
+            <div className="flex">
+                <div className=" container mx-auto ">
+                    <header className="flex mt-28 p-3 justify-around border rounded-t border-cyan-600">
                         <Link href="/">Main</Link>
                         <Link href="/tokens">Tokens</Link>
                     </header>
