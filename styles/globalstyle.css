@@ -10,6 +10,13 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+input {
+    background-color: #111827;
+}
+select {
+    background-color: #111827;
+}
+
 a {
     color: rgb(8 145 178);
 }

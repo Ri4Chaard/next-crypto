@@ -3,9 +3,9 @@ import { MainContainer } from "../components/MainContainer";
 import Image from "next/image";
 import Link from "next/link";
 import { useFetching } from "../hooks/useFetching";
-import styles from "../styles/menu.module.scss";
 import { Pagination } from "../components/Pagination";
 import { getPageCount } from "../hooks/usePagination";
+import { ArrowPathIcon } from "@heroicons/react/20/solid";
 
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
@@ -23,7 +23,6 @@ const Tokens = () => {
         setTokens(response.data);
         setFilteredTokens(response.data);
         setTotalPages(getPageCount(100, perPage));
-        setErr(tokError.message);
     });
 
     useEffect(() => {
@@ -55,19 +54,12 @@ const Tokens = () => {
         setTotalPages(getPageCount(filteredTokens.length, perPage));
     };
 
-    console.log(filter);
-
     const changePage = (page) => {
         setPage(page);
     };
-
     const myLoader = ({ src }) => {
         return src;
     };
-
-    console.log(filteredTokens);
-    console.log(tokens);
-    console.log(totalPages);
 
     return (
         <MainContainer>
@@ -80,9 +72,10 @@ const Tokens = () => {
             ) : (
                 <>
                     <div className="flex items-center border-x justify-between border-cyan-600 text-cyan-600 p-3">
-                        <div className="flex">
+                        <div className="flex items-center">
                             <p className="pr-2">Tokens per page:</p>
                             <select
+                                className="p-1 border rounded border-cyan-600"
                                 name="count"
                                 onChange={(e) => setPerPage(e.target.value)}
                             >
@@ -97,54 +90,72 @@ const Tokens = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className="flex">
-                            <p className="pr-2">Search</p>
+                        <div className="flex items-center">
+                            <p className="pr-2">Search for token</p>
                             <input
+                                className="p-1 border rounded border-cyan-600"
                                 value={filter}
                                 onChange={handleFilterInput}
                                 placeholder="Type here.."
                             />
                         </div>
-                        <div className="flex">
-                            <p className="pr-2">{tokError.message}</p>
+                        <div className="flex items-center">
+                            {tokError ? (
+                                <p className="pr-2 text-red-700">
+                                    {tokError.message}
+                                </p>
+                            ) : (
+                                <p className="pr-2 text-green-700">
+                                    Updated successfully
+                                </p>
+                            )}
                             <p className="pr-2">{upDate}</p>
-                            <div
-                                className="cursor-pointer"
+                            <ArrowPathIcon
+                                className="h-5 w-5 cursor-pointer"
                                 onClick={() => setRefresh(true)}
-                            >
-                                O
-                            </div>
+                            />
                         </div>
                     </div>
                     <div className="flex flex-col p-3 border-x border-cyan-600">
-                        {filteredTokens
-                            .slice(perPage * page - perPage, perPage * page)
-                            .map((token) => (
-                                <Link
-                                    key={token.id}
-                                    className="flex flex-col items-center"
-                                    href={`/tokens/${token.id}`}
-                                >
-                                    <div className="flex flex-row-reverse justify-between items-center p-3 w-1/2 h-24">
-                                        <h2 className="text-xl">
-                                            {token.name}
-                                        </h2>
-                                        <Image
-                                            loader={myLoader}
-                                            src={token.image}
-                                            width={50}
-                                            height={50}
-                                            alt="not found"
-                                            priority={false}
-                                            unoptimized={true}
-                                        />
-                                    </div>
-                                </Link>
-                            ))}
-                        {!filteredTokens.length && (
+                        {tokError ? (
                             <p className="flex justify-center items-center text-3xl h-96">
-                                No tokens found
+                                {"Error occured :("}
                             </p>
+                        ) : (
+                            <>
+                                {filteredTokens
+                                    .slice(
+                                        perPage * page - perPage,
+                                        perPage * page
+                                    )
+                                    .map((token) => (
+                                        <Link
+                                            key={token.id}
+                                            className="flex flex-col items-center"
+                                            href={`/tokens/${token.id}`}
+                                        >
+                                            <div className="flex flex-row-reverse justify-between items-center p-3 w-1/2 h-24">
+                                                <h2 className="text-xl">
+                                                    {token.name}
+                                                </h2>
+                                                <Image
+                                                    loader={myLoader}
+                                                    src={token.image}
+                                                    width={50}
+                                                    height={50}
+                                                    alt="not found"
+                                                    priority={false}
+                                                    unoptimized={true}
+                                                />
+                                            </div>
+                                        </Link>
+                                    ))}
+                                {!filteredTokens.length && (
+                                    <p className="flex justify-center items-center text-3xl h-96">
+                                        No tokens found
+                                    </p>
+                                )}
+                            </>
                         )}
                     </div>
                     <Pagination
