@@ -1,48 +1,34 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MainContainer } from "../components/MainContainer";
 import Image from "next/image";
 import Link from "next/link";
-import { useFetching } from "../hooks/useFetching";
 import { Pagination } from "../components/Pagination";
 import { getPageCount } from "../hooks/usePagination";
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
+import { AppContext } from "../components/context";
 
 const Tokens = () => {
-    const [tokens, setTokens] = useState([]);
+    const {
+        tokens,
+        refresh,
+        setRefresh,
+        upDate,
+        isTokLoading,
+        tokError,
+        filteredTokens,
+        setFilteredTokens,
+    } = useContext(AppContext);
+
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
-    const [upDate, setUpDate] = useState();
-    const [refresh, setRefresh] = useState(false);
     const [filter, setFilter] = useState("");
-    const [filteredTokens, setFilteredTokens] = useState([]);
-
-    const axios = require("axios");
-    const [fetchTokens, isTokLoading, tokError] = useFetching(async (url) => {
-        const response = await axios.get(url);
-        setTokens(response.data);
-        setFilteredTokens(response.data);
-        setTotalPages(getPageCount(100, perPage));
-    });
 
     useEffect(() => {
-        fetchTokens(
-            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc",
-            perPage
-        );
-        let date = new Date();
-        setUpDate(
-            `Last update: ${date.getDate() < 10 ? "0" : ""}${date.getDate()}.${
-                date.getMonth() < 10 ? "0" : ""
-            }${date.getMonth() + 1} at ${
-                date.getHours() < 10 ? "0" : ""
-            }${date.getHours()}:${
-                date.getMinutes() < 10 ? "0" : ""
-            }${date.getMinutes()}`
-        );
-        setRefresh(false);
+        setFilteredTokens(tokens);
+        setTotalPages(getPageCount(100, perPage));
         setFilter("");
-    }, [refresh, perPage]);
+    }, [perPage, refresh]);
 
     const handleFilterInput = (e) => {
         const searchToken = e.target.value;
