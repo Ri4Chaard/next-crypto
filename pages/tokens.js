@@ -136,7 +136,7 @@ const Tokens = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col p-3 border-x border-cyan-600 items-center">
+                    <div className="flex flex-col border-x border-cyan-600 items-center">
                         {tokError ? (
                             <p className="flex justify-center items-center text-3xl h-96">
                                 {"Error occured :("}
@@ -154,7 +154,7 @@ const Tokens = () => {
                                             className="flex flex-col items-center w-full odd:bg-slate-800"
                                             href={`/tokens/${token.id}`}
                                         >
-                                            <div className="flex flex-row-reverse justify-between items-center p-3 w-full h-24">
+                                            <div className="flex flex-row-reverse justify-between items-center p-6 w-full h-24">
                                                 <h2 className="text-xl w-2/6 text-right">
                                                     {token.name}
                                                 </h2>
