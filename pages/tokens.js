@@ -151,7 +151,7 @@ const Tokens = () => {
                                     .map((token) => (
                                         <Link
                                             key={token.id}
-                                            className="flex flex-col items-center w-1/2"
+                                            className="flex flex-col items-center w-full odd:bg-slate-800"
                                             href={`/tokens/${token.id}`}
                                         >
                                             <div className="flex flex-row-reverse justify-between items-center p-3 w-full h-24">
