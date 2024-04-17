@@ -12,7 +12,7 @@ const Tokens = () => {
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
-    const [upDate, setUpDate] = useState();
+    const [upDate, setUpDate] = useState("");
     const [refresh, setRefresh] = useState(false);
     const [filter, setFilter] = useState("");
     const [filteredTokens, setFilteredTokens] = useState([]);
@@ -22,27 +22,47 @@ const Tokens = () => {
         const response = await axios.get(url);
         setTokens(response.data);
         setFilteredTokens(response.data);
-        setTotalPages(getPageCount(100, perPage));
+        localStorage.setItem("fetchedTokens", JSON.stringify(response.data));
+        let date = new Date();
+        const lastUpdate = `Last update: ${
+            date.getDate() < 10 ? "0" : ""
+        }${date.getDate()}.${date.getMonth() < 10 ? "0" : ""}${
+            date.getMonth() + 1
+        } at ${date.getHours() < 10 ? "0" : ""}${date.getHours()}:${
+            date.getMinutes() < 10 ? "0" : ""
+        }${date.getMinutes()}`;
+        setUpDate(lastUpdate);
+        localStorage.setItem("lastUpdate", JSON.stringify(lastUpdate));
     });
 
     useEffect(() => {
-        fetchTokens(
-            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc",
-            perPage
-        );
-        let date = new Date();
-        setUpDate(
-            `Last update: ${date.getDate() < 10 ? "0" : ""}${date.getDate()}.${
-                date.getMonth() < 10 ? "0" : ""
-            }${date.getMonth() + 1} at ${
-                date.getHours() < 10 ? "0" : ""
-            }${date.getHours()}:${
-                date.getMinutes() < 10 ? "0" : ""
-            }${date.getMinutes()}`
-        );
+        const storedTokens = localStorage.getItem("fetchedTokens");
+        const lastUpdate = localStorage.getItem("lastUpdate");
+        if (storedTokens) {
+            setTokens(JSON.parse(storedTokens));
+            setFilteredTokens(JSON.parse(storedTokens));
+            setUpDate(JSON.parse(lastUpdate));
+        } else {
+            fetchTokens(
+                "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc"
+            );
+        }
+    }, []);
+
+    useEffect(() => {
+        if (refresh)
+            fetchTokens(
+                "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc"
+            );
         setRefresh(false);
         setFilter("");
-    }, [refresh, perPage]);
+    }, [refresh]);
+
+    useEffect(() => {
+        setPage(1);
+        setFilter("");
+        setTotalPages(getPageCount(100, perPage));
+    }, [perPage]);
 
     const handleFilterInput = (e) => {
         const searchToken = e.target.value;
