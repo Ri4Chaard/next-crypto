@@ -136,7 +136,7 @@ const Tokens = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col p-3 border-x border-cyan-600">
+                    <div className="flex flex-col p-3 border-x border-cyan-600 items-center">
                         {tokError ? (
                             <p className="flex justify-center items-center text-3xl h-96">
                                 {"Error occured :("}
@@ -151,13 +151,29 @@ const Tokens = () => {
                                     .map((token) => (
                                         <Link
                                             key={token.id}
-                                            className="flex flex-col items-center"
+                                            className="flex flex-col items-center w-1/2"
                                             href={`/tokens/${token.id}`}
                                         >
-                                            <div className="flex flex-row-reverse justify-between items-center p-3 w-1/2 h-24">
-                                                <h2 className="text-xl">
+                                            <div className="flex flex-row-reverse justify-between items-center p-3 w-full h-24">
+                                                <h2 className="text-xl w-2/6 text-right">
                                                     {token.name}
                                                 </h2>
+                                                <p
+                                                    className={
+                                                        token.price_change_percentage_24h <
+                                                        0
+                                                            ? "w-1/6 text-right text-red-700"
+                                                            : "w-1/6 text-right text-green-700"
+                                                    }
+                                                >
+                                                    {token.price_change_percentage_24h.toFixed(
+                                                        4
+                                                    )}
+                                                    %
+                                                </p>
+                                                <p className="w-1/6 text-right">
+                                                    ${token.current_price}
+                                                </p>
                                                 <Image
                                                     loader={myLoader}
                                                     src={token.image}
