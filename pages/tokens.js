@@ -91,7 +91,7 @@ const Tokens = () => {
                 </div>
             ) : (
                 <>
-                    <div className="flex items-center border-x justify-between border-cyan-600 text-cyan-600 p-3">
+                    <div className="flex items-center border-x justify-between border-cyan-600 text-cyan-600 p-3 pb-6">
                         <div className="flex items-center">
                             <p className="pr-2">Tokens per page:</p>
                             <select
@@ -143,27 +143,66 @@ const Tokens = () => {
                             </p>
                         ) : (
                             <>
+                                <div className="flex  justify-between items-center border-b border-cyan-600 px-6 w-full text-slate-400">
+                                    <div className="flex flex-row-reverse w-2/6 justify-end items-center">
+                                        <h2 className="text-xl text-left mr-2">
+                                            Name
+                                        </h2>
+
+                                        <p className="text-xl w-8 mr-5">#</p>
+                                    </div>
+                                    <p className="w-1/6 text-center">
+                                        Current price
+                                    </p>
+
+                                    <p className="w-1/6 text-center">
+                                        Price change
+                                    </p>
+                                    <p className="w-1/6 text-right">
+                                        Market cup
+                                    </p>
+                                </div>
                                 {filteredTokens
                                     .slice(
                                         perPage * page - perPage,
                                         perPage * page
                                     )
-                                    .map((token) => (
+                                    .map((token, index) => (
                                         <Link
                                             key={token.id}
                                             className="flex flex-col items-center w-full odd:bg-slate-800"
                                             href={`/tokens/${token.id}`}
                                         >
-                                            <div className="flex flex-row-reverse justify-between items-center p-6 w-full h-24">
-                                                <h2 className="text-xl w-2/6 text-right">
-                                                    {token.name}
-                                                </h2>
+                                            <div className="flex  justify-between items-center p-6 w-full h-24">
+                                                <div className="flex flex-row-reverse w-2/6 justify-end items-center">
+                                                    <h2 className="text-xl text-left text-slate-400">
+                                                        {token.symbol.toUpperCase()}
+                                                    </h2>
+                                                    <h2 className="text-xl text-left mr-2">
+                                                        {token.name}
+                                                    </h2>
+                                                    <img
+                                                        className="w-12 h-12 mr-6"
+                                                        src={token.image}
+                                                        alt="not found"
+                                                    />
+                                                    <p className="text-xl w-8 mr-5">
+                                                        {perPage * page +
+                                                            index +
+                                                            1 -
+                                                            perPage}
+                                                    </p>
+                                                </div>
+                                                <p className="w-1/6 text-center">
+                                                    ${token.current_price}
+                                                </p>
+
                                                 <p
                                                     className={
                                                         token.price_change_percentage_24h <
                                                         0
-                                                            ? "w-1/6 text-right text-red-700"
-                                                            : "w-1/6 text-right text-green-700"
+                                                            ? "w-1/6 text-center text-red-700"
+                                                            : "w-1/6 text-center text-green-700"
                                                     }
                                                 >
                                                     {token.price_change_percentage_24h.toFixed(
@@ -172,17 +211,11 @@ const Tokens = () => {
                                                     %
                                                 </p>
                                                 <p className="w-1/6 text-right">
-                                                    ${token.current_price}
+                                                    $
+                                                    {token.market_cap.toLocaleString(
+                                                        "en-US"
+                                                    )}
                                                 </p>
-                                                <Image
-                                                    loader={myLoader}
-                                                    src={token.image}
-                                                    width={50}
-                                                    height={50}
-                                                    alt="not found"
-                                                    priority={false}
-                                                    unoptimized={true}
-                                                />
                                             </div>
                                         </Link>
                                     ))}
