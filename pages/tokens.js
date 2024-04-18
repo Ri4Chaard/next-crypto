@@ -5,9 +5,14 @@ import Link from "next/link";
 import { useFetching } from "../hooks/useFetching";
 import { Pagination } from "../components/Pagination";
 import { getPageCount } from "../hooks/usePagination";
-import { ArrowPathIcon } from "@heroicons/react/20/solid";
+import {
+    ArrowPathIcon,
+    Cog6ToothIcon,
+    SignalIcon,
+} from "@heroicons/react/20/solid";
 import { FetchedTokens } from "../components/FetchedTokens";
 import { Refresher } from "../components/Refresher";
+import { Loader } from "../components/Loader";
 
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
@@ -85,9 +90,7 @@ const Tokens = () => {
         <MainContainer>
             {isTokLoading ? (
                 <div className="flex flex-col p-3 border-x border-b rounded-b border-cyan-600">
-                    <h1 className="flex justify-center items-center text-3xl h-96">
-                        Loading...
-                    </h1>
+                    <Loader />
                 </div>
             ) : (
                 <>
