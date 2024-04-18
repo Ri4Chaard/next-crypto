@@ -6,6 +6,8 @@ import { useFetching } from "../hooks/useFetching";
 import { Pagination } from "../components/Pagination";
 import { getPageCount } from "../hooks/usePagination";
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
+import { FetchedTokens } from "../components/FetchedTokens";
+import { Refresher } from "../components/Refresher";
 
 const Tokens = () => {
     const [tokens, setTokens] = useState([]);
@@ -72,13 +74,11 @@ const Tokens = () => {
         );
         setFilteredTokens(filteredTokens);
         setTotalPages(getPageCount(filteredTokens.length, perPage));
+        setPage(1);
     };
 
     const changePage = (page) => {
         setPage(page);
-    };
-    const myLoader = ({ src }) => {
-        return src;
     };
 
     return (
@@ -120,112 +120,19 @@ const Tokens = () => {
                             />
                         </div>
                         <div className="flex items-center">
-                            {tokError ? (
-                                <p className="pr-2 text-red-700">
-                                    {tokError.message}
-                                </p>
-                            ) : (
-                                <p className="pr-2 text-green-700">
-                                    Updated successfully
-                                </p>
-                            )}
-                            <p className="pr-2">{upDate}</p>
-                            <ArrowPathIcon
-                                className="h-5 w-5 cursor-pointer"
-                                onClick={() => setRefresh(true)}
+                            <Refresher
+                                tokError={tokError}
+                                upDate={upDate}
+                                setRefresh={setRefresh}
                             />
                         </div>
                     </div>
                     <div className="flex flex-col border-x border-cyan-600 items-center">
-                        {tokError ? (
-                            <p className="flex justify-center items-center text-3xl h-96">
-                                {"Error occured :("}
-                            </p>
-                        ) : (
-                            <>
-                                <div className="flex  justify-between items-center border-b border-cyan-600 px-6 w-full text-slate-400">
-                                    <div className="flex flex-row-reverse w-2/6 justify-end items-center">
-                                        <h2 className="text-xl text-left mr-2">
-                                            Name
-                                        </h2>
-
-                                        <p className="text-xl w-8 mr-5">#</p>
-                                    </div>
-                                    <p className="w-1/6 text-center">
-                                        Current price
-                                    </p>
-
-                                    <p className="w-1/6 text-center">
-                                        Price change
-                                    </p>
-                                    <p className="w-1/6 text-right">
-                                        Market cup
-                                    </p>
-                                </div>
-                                {filteredTokens
-                                    .slice(
-                                        perPage * page - perPage,
-                                        perPage * page
-                                    )
-                                    .map((token, index) => (
-                                        <Link
-                                            key={token.id}
-                                            className="flex flex-col items-center w-full odd:bg-slate-800"
-                                            href={`/tokens/${token.id}`}
-                                        >
-                                            <div className="flex  justify-between items-center p-6 w-full h-24">
-                                                <div className="flex flex-row-reverse w-2/6 justify-end items-center">
-                                                    <h2 className="text-xl text-left text-slate-400">
-                                                        {token.symbol.toUpperCase()}
-                                                    </h2>
-                                                    <h2 className="text-xl text-left mr-2">
-                                                        {token.name}
-                                                    </h2>
-                                                    <img
-                                                        className="w-12 h-12 mr-6"
-                                                        src={token.image}
-                                                        alt="not found"
-                                                    />
-                                                    <p className="text-xl w-8 mr-5">
-                                                        {perPage * page +
-                                                            index +
-                                                            1 -
-                                                            perPage}
-                                                    </p>
-                                                </div>
-                                                <p className="w-1/6 text-center">
-                                                    ${token.current_price}
-                                                </p>
-
-                                                <p
-                                                    className={
-                                                        token.price_change_percentage_24h <
-                                                        0
-                                                            ? "w-1/6 text-center text-red-700"
-                                                            : "w-1/6 text-center text-green-700"
-                                                    }
-                                                >
-                                                    {token.price_change_percentage_24h.toFixed(
-                                                        4
-                                                    )}
-                                                    %
-                                                </p>
-                                                <p className="w-1/6 text-right">
-                                                    $
-                                                    {token.market_cap.toLocaleString(
-                                                        "en-US"
-                                                    )}
-                                                </p>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                {!filteredTokens.length && (
-                                    <p className="flex justify-center items-center text-3xl h-96">
-                                        No tokens found
-                                    </p>
-                                )}
-                            </>
-                        )}
+                        <FetchedTokens
+                            filteredTokens={filteredTokens}
+                            perPage={perPage}
+                            page={page}
+                        />
                     </div>
                     <Pagination
                         curPage={page}
