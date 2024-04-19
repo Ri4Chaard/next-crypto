@@ -1,10 +1,14 @@
+import {
+    ArrowDownRightIcon,
+    ArrowUpRightIcon,
+} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React from "react";
 
 export const FetchedTokens = ({ filteredTokens, perPage, page }) => {
     return (
         <>
-            <div className="flex  justify-between items-center border-b border-cyan-600 px-6 w-full text-slate-400">
+            <div className="flex justify-between items-center border-b border-cyan-600 px-6 w-full text-slate-400">
                 <div className="flex flex-row-reverse w-2/6 justify-end items-center">
                     <h2 className="text-xl text-left">Name</h2>
 
@@ -43,16 +47,25 @@ export const FetchedTokens = ({ filteredTokens, perPage, page }) => {
                             <p className="w-1/12 text-right">
                                 ${token.current_price.toLocaleString("en-US")}
                             </p>
-
-                            <p
-                                className={
-                                    token.price_change_percentage_24h < 0
-                                        ? "w-1/12 text-right text-red-700"
-                                        : "w-1/12 text-right text-green-700"
-                                }
-                            >
-                                {token.price_change_percentage_24h.toFixed(4)}%
-                            </p>
+                            <div className="w-1/12 flex items-center justify-end">
+                                {token.price_change_percentage_24h < 0 ? (
+                                    <ArrowDownRightIcon className="w-5 h-5 text-red-700" />
+                                ) : (
+                                    <ArrowUpRightIcon className="w-5 h-5 text-green-700" />
+                                )}
+                                <p
+                                    className={
+                                        token.price_change_percentage_24h < 0
+                                            ? " text-red-700"
+                                            : " text-green-700"
+                                    }
+                                >
+                                    {token.price_change_percentage_24h.toFixed(
+                                        4
+                                    )}
+                                    %
+                                </p>
+                            </div>
                             <p className="w-1/6 text-right">
                                 ${token.market_cap.toLocaleString("en-US")}
                             </p>

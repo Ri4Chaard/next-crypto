@@ -2,55 +2,112 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MainContainer } from "../../components/MainContainer";
 import { useFetching } from "../../hooks/useFetching";
+import { Loader } from "../../components/Loader";
+import ethLogo from "../../icons/eth.png";
+import Image from "next/image";
 
 export default function () {
     const [token, setToken] = useState();
-    const [err, setErr] = useState("");
+    const [price, setPrice] = useState();
 
     const { query } = useRouter();
     const axios = require("axios");
     const [fetchToken, isTokLoading, tokError] = useFetching(async (url) => {
         const response = await axios.get(url);
-        console.log(response);
         setToken(response.data);
-        setErr(tokError.message);
     });
+    const [fetchPrice, isPriceLoading, priceError] = useFetching(
+        async (url) => {
+            const response = await axios.get(url);
+            setPrice(response.data);
+        }
+    );
     console.log(query.id);
 
     useEffect(() => {
-        fetchToken(
-            `https://api.coingecko.com/api/v3/coins/${query.id}?vs_currency=usd&include_market_cap=true&include_24h_vol=true&include_24h_change=true&include_last_updated_at=true`
-        );
+        if (query.id) {
+            fetchToken(
+                `https://api.coingecko.com/api/v3/coins/${query.id}?vs_currency=usd&include_market_cap=true&include_24h_vol=true&include_24h_change=true&include_last_updated_at=true`
+            );
+            fetchPrice(
+                `https://api.coingecko.com/api/v3/coins/${query.id}/market_chart?vs_currency=usd&days=30&interval=daily&precision=full`
+            );
+        }
     }, [query.id]);
 
     console.log(token);
+    console.log(price);
 
     return (
         <MainContainer>
             {isTokLoading ? (
-                <h1>Loading...</h1>
+                <div className="flex flex-col p-3 border-x border-b rounded-b border-cyan-600">
+                    <Loader />
+                </div>
             ) : (
                 <>
-                    {err && <h2>{err}</h2>}
+                    {tokError && <h2>{tokError.message}</h2>}
                     {token && (
-                        <>
-                            <div>
-                                <div>
-                                    <h1>{token.name}</h1>
-                                    <img src={token.image.small} />
-                                    <h2>{token.symbol}</h2>
+                        <div className="border-x border-cyan-600 p-3">
+                            <h1 className="text-3xl">
+                                {token.name}
+                                <span className="ml-3 text-slate-400">
+                                    {token.symbol.toUpperCase()}
+                                </span>
+                            </h1>
+                            <div className="flex justify-between">
+                                <div className="flex flex-col  w-1/3">
+                                    <img
+                                        className="w-24 h-24"
+                                        src={token.image.large}
+                                    />
+                                    <div className="flex flex-wrap items-center w-2/3">
+                                        {token.categories.map((category) => (
+                                            <span className="text-xs m-1 p-1 bg-cyan-600 border border-cyan-600 rounded-lg">
+                                                {category}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    {token.platforms.ethereum && (
+                                        <div>
+                                            <p>Contract</p>
+                                            <div className="flex">
+                                                <Image
+                                                    className="mr-2"
+                                                    src={ethLogo}
+                                                    width={20}
+                                                    height={20}
+                                                    alt="eth"
+                                                />
+                                                <p>
+                                                    {token.platforms.ethereum}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div>
+                                        Homepage:
+                                        <a
+                                            href={token.links.homepage[0]}
+                                            target="_blank"
+                                        >
+                                            {token.links.homepage[0]}
+                                        </a>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p>
-                                        Current price: $
-                                        {token.market_data.current_price.usd}
+                                <div className="w-1/3 flex items-center">
+                                    <p className="text-3xl mr-3">
+                                        ${token.market_data.current_price.usd}
                                     </p>
                                     <p>
-                                        Price change 24h: $
+                                        $
                                         {token.market_data.price_change_24h.toFixed(
                                             2
                                         )}
+                                        {"(24h)"}
                                     </p>
+                                </div>
+                                <div className="w-1/3 flex flex-col justify-center">
                                     <p>
                                         High 24h: $
                                         {token.market_data.high_24h.usd}
@@ -61,18 +118,34 @@ export default function () {
                                     </p>
                                 </div>
                             </div>
-                            <p>{token.description.en}</p>
-
                             <div>
-                                Homepage:
-                                <a
-                                    href={token.links.homepage[0]}
-                                    target="_blank"
-                                >
-                                    {token.links.homepage[0]}
-                                </a>
+                                <p>{token.description.en}</p>
                             </div>
-                        </>
+
+                            {token.tickers.slice(0, 10).map((ticker, index) => (
+                                <div className="flex flex-col items-center w-full odd:bg-slate-800">
+                                    <a
+                                        className="flex  justify-between items-center p-6 w-full h-8"
+                                        href={ticker.trade_url}
+                                        target="_blank"
+                                    >
+                                        <div className="flex">
+                                            <p>{index + 1}</p>
+                                            <h3>{ticker.market.name}</h3>
+                                            <p>
+                                                {ticker.base}/{ticker.target}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p>${ticker.last}</p>
+                                        </div>
+                                        <div>
+                                            <p>${ticker.volume}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
                     )}
                 </>
             )}
