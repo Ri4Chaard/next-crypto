@@ -6,10 +6,17 @@ import { Loader } from "../../components/Loader";
 import ethLogo from "../../icons/eth.png";
 import Image from "next/image";
 import { MarketChart } from "../../components/MarketChart";
+import { Refresher } from "../../components/Refresher";
+import { getPageCount } from "../../hooks/usePagination";
+import { Pagination } from "../../components/Pagination";
 
 export default function () {
     const [token, setToken] = useState();
     const [marketCharts, setMarketCharts] = useState();
+    const [refresh, setRefresh] = useState(false);
+    const [page, setPage] = useState(1);
+    const [perPage, setPerPage] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
 
     const { query } = useRouter();
     const axios = require("axios");
@@ -22,7 +29,6 @@ export default function () {
             const response = await axios.get(url);
             setMarketCharts(response.data);
         });
-    console.log(query.id);
 
     useEffect(() => {
         if (query.id) {
@@ -33,10 +39,16 @@ export default function () {
                 `https://api.coingecko.com/api/v3/coins/${query.id}/market_chart?vs_currency=usd&days=30&interval=daily&precision=full`
             );
         }
-    }, [query.id]);
+        setRefresh(false);
+    }, [query.id, refresh]);
 
-    console.log(token);
-    console.log(marketCharts);
+    useEffect(() => {
+        setTotalPages(getPageCount(100, perPage));
+    }, [perPage]);
+
+    const changePage = (page) => {
+        setPage(page);
+    };
 
     return (
         <MainContainer>
@@ -53,12 +65,20 @@ export default function () {
                     )}
                     {token && (
                         <div className="border-x border-cyan-600 p-3">
-                            <h1 className="text-3xl">
-                                {token.name}
-                                <span className="ml-3 text-slate-400">
-                                    {token.symbol.toUpperCase()}
-                                </span>
-                            </h1>
+                            <div className="flex justify-between ">
+                                <h1 className="text-3xl">
+                                    {token.name}
+                                    <span className="ml-3 text-slate-400">
+                                        {token.symbol.toUpperCase()}
+                                    </span>
+                                </h1>
+                                <div className="flex text-cyan-600 items-center">
+                                    <Refresher
+                                        tokError={tokError}
+                                        setRefresh={setRefresh}
+                                    />
+                                </div>
+                            </div>
                             <div className="flex justify-between border-b border-cyan-600 pb-2 mb-3">
                                 <div className="flex flex-col w-1/3">
                                     <img
@@ -127,34 +147,84 @@ export default function () {
                                     )}
                                 </div>
                             </div>
-
-                            {token.tickers.slice(0, 10).map((ticker, index) => (
-                                <div className="flex flex-col items-center w-full odd:bg-slate-800">
-                                    <a
-                                        className="flex  justify-between items-center p-6 w-full h-8"
-                                        href={ticker.trade_url}
-                                        target="_blank"
-                                    >
-                                        <div className="flex">
-                                            <p>{index + 1}</p>
-                                            <h3>{ticker.market.name}</h3>
-                                            <p>
-                                                {ticker.base}/{ticker.target}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p>${ticker.last}</p>
-                                        </div>
-                                        <div>
-                                            <p>${ticker.volume}</p>
-                                        </div>
-                                    </a>
+                            <div>
+                                <div className="flex justify-between">
+                                    <h2 className="text-2xl font-bold">
+                                        {token.name} Markets
+                                    </h2>
+                                    <div className="flex items-center">
+                                        <p className="pr-2">Show rows:</p>
+                                        <select
+                                            className="p-1 border rounded border-cyan-600"
+                                            name="count"
+                                            onChange={(e) =>
+                                                setPerPage(e.target.value)
+                                            }
+                                        >
+                                            {[10, 15, 20, 25].map((val) => (
+                                                <option
+                                                    key={val}
+                                                    selected={
+                                                        val == perPage
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    value={val}
+                                                >
+                                                    {val}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
-                            ))}
+                                {token.tickers
+                                    .slice(
+                                        perPage * page - perPage,
+                                        perPage * page
+                                    )
+                                    .map((ticker, index) => (
+                                        <div className="flex flex-col items-center w-full odd:bg-slate-800">
+                                            <a
+                                                className="flex  justify-between items-center p-6 w-full h-8"
+                                                href={ticker.trade_url}
+                                                target="_blank"
+                                            >
+                                                <div className="flex">
+                                                    <p>
+                                                        {perPage * page +
+                                                            index +
+                                                            1 -
+                                                            perPage}
+                                                    </p>
+                                                    <h3>
+                                                        {ticker.market.name}
+                                                    </h3>
+                                                    <p>
+                                                        {ticker.base}/
+                                                        {ticker.target}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p>${ticker.last}</p>
+                                                </div>
+                                                <div>
+                                                    <p>${ticker.volume}</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    ))}
+                                <div className="flex items-center justify-between border-y rounded-b border-cyan-600 px-4 py-3 mb-3 sm:px-6">
+                                    <Pagination
+                                        curPage={page}
+                                        changePage={changePage}
+                                        totalPages={totalPages}
+                                    />
+                                </div>
+                            </div>
 
                             {token.description.en && (
                                 <div>
-                                    <h2 className="text-2xl">
+                                    <h2 className="text-2xl font-bold">
                                         About {token.name}
                                     </h2>
                                     <p>{token.description.en}</p>

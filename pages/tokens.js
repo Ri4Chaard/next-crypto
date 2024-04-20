@@ -137,11 +137,13 @@ const Tokens = () => {
                             page={page}
                         />
                     </div>
-                    <Pagination
-                        curPage={page}
-                        changePage={changePage}
-                        totalPages={totalPages}
-                    />
+                    <div className="flex items-center justify-between border rounded-b border-cyan-600 px-4 py-3 sm:px-6">
+                        <Pagination
+                            curPage={page}
+                            changePage={changePage}
+                            totalPages={totalPages}
+                        />
+                    </div>
                 </>
             )}
         </MainContainer>
