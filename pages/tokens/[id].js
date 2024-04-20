@@ -47,7 +47,7 @@ export default function () {
             ) : (
                 <>
                     {tokError && (
-                        <h2 className="flex justify-center items-center text-3xl h-96">
+                        <h2 className="flex justify-center items-center text-3xl h-96 border-x border-b border-cyan-600 rounded-b">
                             {tokError.message}
                         </h2>
                     )}
@@ -59,8 +59,8 @@ export default function () {
                                     {token.symbol.toUpperCase()}
                                 </span>
                             </h1>
-                            <div className="flex justify-between">
-                                <div className="flex flex-col  w-1/3">
+                            <div className="flex justify-between border-b border-cyan-600 pb-2 mb-3">
+                                <div className="flex flex-col w-1/3">
                                     <img
                                         className="w-24 h-24"
                                         src={token.image.large}
@@ -69,11 +69,10 @@ export default function () {
                                         ${token.market_data.current_price.usd}
                                     </p>
                                     <p>
-                                        $
-                                        {token.market_data.price_change_24h.toFixed(
+                                        {token.market_data.price_change_percentage_24h.toFixed(
                                             2
                                         )}
-                                        {"(24h)"}
+                                        %{"(24h)"}
                                     </p>
                                     <p>
                                         High 24h: $
@@ -83,7 +82,7 @@ export default function () {
                                         Low 24h: $
                                         {token.market_data.low_24h.usd}
                                     </p>
-                                    <div className="flex flex-wrap items-center w-2/3">
+                                    <div className="flex flex-wrap items-center w-2/3 mb-3">
                                         {token.categories.map((category) => (
                                             <span className="text-xs m-1 p-1 bg-cyan-600 border border-cyan-600 rounded-lg">
                                                 {category}
@@ -91,9 +90,9 @@ export default function () {
                                         ))}
                                     </div>
                                     {token.platforms.ethereum && (
-                                        <div>
+                                        <div className="mb-3">
                                             <p>Contract</p>
-                                            <div className="flex">
+                                            <div className="flex items-center">
                                                 <Image
                                                     className="mr-2"
                                                     src={ethLogo}
@@ -101,7 +100,7 @@ export default function () {
                                                     height={20}
                                                     alt="eth"
                                                 />
-                                                <p>
+                                                <p className="text-xs text-slate-400">
                                                     {token.platforms.ethereum}
                                                 </p>
                                             </div>
@@ -118,14 +117,15 @@ export default function () {
                                     </div>
                                 </div>
                                 <div className="w-2/3">
-                                    <MarketChart
-                                        prices={marketCharts.prices}
-                                        token={token.name}
-                                    />
+                                    {isMarketChartsLoading ? (
+                                        <Loader />
+                                    ) : (
+                                        <MarketChart
+                                            prices={marketCharts.prices}
+                                            token={token.name}
+                                        />
+                                    )}
                                 </div>
-                            </div>
-                            <div>
-                                <p>{token.description.en}</p>
                             </div>
 
                             {token.tickers.slice(0, 10).map((ticker, index) => (
@@ -151,6 +151,15 @@ export default function () {
                                     </a>
                                 </div>
                             ))}
+
+                            {token.description.en && (
+                                <div>
+                                    <h2 className="text-2xl">
+                                        About {token.name}
+                                    </h2>
+                                    <p>{token.description.en}</p>
+                                </div>
+                            )}
                         </div>
                     )}
                 </>

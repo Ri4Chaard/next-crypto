@@ -24,6 +24,7 @@ ChartJS.register(
 export const MarketChart = ({ prices, token }) => {
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: false,
