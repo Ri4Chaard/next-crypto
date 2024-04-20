@@ -5,10 +5,11 @@ import { useFetching } from "../../hooks/useFetching";
 import { Loader } from "../../components/Loader";
 import ethLogo from "../../icons/eth.png";
 import Image from "next/image";
+import { MarketChart } from "../../components/MarketChart";
 
 export default function () {
     const [token, setToken] = useState();
-    const [price, setPrice] = useState();
+    const [marketCharts, setMarketCharts] = useState();
 
     const { query } = useRouter();
     const axios = require("axios");
@@ -16,12 +17,11 @@ export default function () {
         const response = await axios.get(url);
         setToken(response.data);
     });
-    const [fetchPrice, isPriceLoading, priceError] = useFetching(
-        async (url) => {
+    const [fetchMarketCharts, isMarketChartsLoading, marketChartsError] =
+        useFetching(async (url) => {
             const response = await axios.get(url);
-            setPrice(response.data);
-        }
-    );
+            setMarketCharts(response.data);
+        });
     console.log(query.id);
 
     useEffect(() => {
@@ -29,14 +29,14 @@ export default function () {
             fetchToken(
                 `https://api.coingecko.com/api/v3/coins/${query.id}?vs_currency=usd&include_market_cap=true&include_24h_vol=true&include_24h_change=true&include_last_updated_at=true`
             );
-            fetchPrice(
+            fetchMarketCharts(
                 `https://api.coingecko.com/api/v3/coins/${query.id}/market_chart?vs_currency=usd&days=30&interval=daily&precision=full`
             );
         }
     }, [query.id]);
 
     console.log(token);
-    console.log(price);
+    console.log(marketCharts);
 
     return (
         <MainContainer>
@@ -46,7 +46,11 @@ export default function () {
                 </div>
             ) : (
                 <>
-                    {tokError && <h2>{tokError.message}</h2>}
+                    {tokError && (
+                        <h2 className="flex justify-center items-center text-3xl h-96">
+                            {tokError.message}
+                        </h2>
+                    )}
                     {token && (
                         <div className="border-x border-cyan-600 p-3">
                             <h1 className="text-3xl">
@@ -61,6 +65,24 @@ export default function () {
                                         className="w-24 h-24"
                                         src={token.image.large}
                                     />
+                                    <p className="text-3xl mr-3">
+                                        ${token.market_data.current_price.usd}
+                                    </p>
+                                    <p>
+                                        $
+                                        {token.market_data.price_change_24h.toFixed(
+                                            2
+                                        )}
+                                        {"(24h)"}
+                                    </p>
+                                    <p>
+                                        High 24h: $
+                                        {token.market_data.high_24h.usd}
+                                    </p>
+                                    <p>
+                                        Low 24h: $
+                                        {token.market_data.low_24h.usd}
+                                    </p>
                                     <div className="flex flex-wrap items-center w-2/3">
                                         {token.categories.map((category) => (
                                             <span className="text-xs m-1 p-1 bg-cyan-600 border border-cyan-600 rounded-lg">
@@ -95,27 +117,11 @@ export default function () {
                                         </a>
                                     </div>
                                 </div>
-                                <div className="w-1/3 flex items-center">
-                                    <p className="text-3xl mr-3">
-                                        ${token.market_data.current_price.usd}
-                                    </p>
-                                    <p>
-                                        $
-                                        {token.market_data.price_change_24h.toFixed(
-                                            2
-                                        )}
-                                        {"(24h)"}
-                                    </p>
-                                </div>
-                                <div className="w-1/3 flex flex-col justify-center">
-                                    <p>
-                                        High 24h: $
-                                        {token.market_data.high_24h.usd}
-                                    </p>
-                                    <p>
-                                        Low 24h: $
-                                        {token.market_data.low_24h.usd}
-                                    </p>
+                                <div className="w-2/3">
+                                    <MarketChart
+                                        prices={marketCharts.prices}
+                                        token={token.name}
+                                    />
                                 </div>
                             </div>
                             <div>
