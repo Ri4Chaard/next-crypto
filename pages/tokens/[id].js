@@ -72,7 +72,7 @@ export default function () {
                         </h2>
                     )}
                     {token && (
-                        <div className="border-x border-cyan-600 p-3">
+                        <div className="border-x border-b rounded border-cyan-600 p-3 mb-28">
                             <div className="flex justify-between ">
                                 <h1 className="text-3xl">
                                     {token.name}
@@ -371,11 +371,15 @@ export default function () {
                             </div>
 
                             {token.description.en && (
-                                <div>
-                                    <h2 className="text-2xl font-bold">
+                                <div className="">
+                                    <h2 className="text-2xl font-bold mb-2">
                                         About {token.name}
                                     </h2>
-                                    <p>{token.description.en}</p>
+                                    <p
+                                        dangerouslySetInnerHTML={{
+                                            __html: token.description.en,
+                                        }}
+                                    ></p>
                                 </div>
                             )}
                         </div>
