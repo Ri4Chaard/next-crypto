@@ -9,7 +9,7 @@ import Image from "next/image";
 const Index = () => {
     return (
         <MainContainer>
-            <div className="border-x border-b rounded border-cyan-600 p-3 mb-28">
+            <div className="border-x border-b border-solid rounded border-cyan-600 p-3 mb-28">
                 <h1 className="text-3xl font-bold mb-3">Hello there!</h1>
                 <div className="flex justify-between">
                     <div className="w-1/3 flex flex-col mr-8">
