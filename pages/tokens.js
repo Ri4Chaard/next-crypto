@@ -89,16 +89,16 @@ const Tokens = () => {
     return (
         <MainContainer>
             {isTokLoading ? (
-                <div className="flex flex-col p-3 border-x border-b rounded-b border-cyan-600">
+                <div className="flex flex-col p-3 border-solid border-x border-b rounded-b border-cyan-600">
                     <Loader />
                 </div>
             ) : (
                 <>
-                    <div className="flex items-center border-x justify-between border-cyan-600 text-white p-3 pb-6">
+                    <div className="flex items-center border-x border-solid justify-between border-cyan-600 text-white p-3 pb-6">
                         <div className="flex items-center">
                             <p className="mr-2">Show rows:</p>
                             <select
-                                className="p-1 border rounded border-cyan-600 mr-2"
+                                className="p-1 border border-solid rounded border-cyan-600 mr-2"
                                 name="count"
                                 onChange={(e) => setPerPage(e.target.value)}
                             >
@@ -116,7 +116,7 @@ const Tokens = () => {
                         <div className="flex items-center">
                             <p className="pr-2">Search for token</p>
                             <input
-                                className="p-1 border rounded border-cyan-600 mr-2"
+                                className="p-1 border border-solid rounded border-cyan-600 mr-2"
                                 value={filter}
                                 onChange={handleFilterInput}
                                 placeholder="Type here.."
@@ -130,14 +130,14 @@ const Tokens = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col border-x border-cyan-600 items-center">
+                    <div className="flex flex-col border-x border-solid border-cyan-600 items-center">
                         <FetchedTokens
                             filteredTokens={filteredTokens}
                             perPage={perPage}
                             page={page}
                         />
                     </div>
-                    <div className="flex items-center justify-between border rounded-b border-cyan-600 px-4 py-3 sm:px-6">
+                    <div className="flex items-center justify-between border border-solid rounded-b border-cyan-600 px-4 py-3 sm:px-6">
                         <Pagination
                             curPage={page}
                             changePage={changePage}

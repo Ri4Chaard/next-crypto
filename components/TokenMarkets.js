@@ -3,7 +3,7 @@ import React from "react";
 export const TokenMarkets = ({ token, perPage, page }) => {
     return (
         <>
-            <div className="flex flex-col items-center w-full border-y border-slate-800">
+            <div className="flex flex-col items-center w-full border-y border-solid border-slate-800">
                 <div className="flex justify-between items-center p-6 w-full h-8 text-slate-400">
                     <div className="flex w-1/5 items-center">
                         <p className="mr-2">#</p>
@@ -26,7 +26,7 @@ export const TokenMarkets = ({ token, perPage, page }) => {
             {token.tickers
                 .slice(perPage * page - perPage, perPage * page)
                 .map((ticker, index) => (
-                    <div className="flex flex-col items-center w-full border-b border-slate-800 hover:bg-slate-800">
+                    <div className="flex flex-col items-center w-full border-b border-solid border-slate-800 hover:bg-slate-800">
                         <a
                             className="flex  justify-between items-center p-6 w-full h-8"
                             href={ticker.trade_url}

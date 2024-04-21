@@ -8,7 +8,7 @@ import React from "react";
 export const FetchedTokens = ({ filteredTokens, perPage, page }) => {
     return (
         <>
-            <div className="flex justify-between items-center border-y border-slate-800 px-6 w-full text-slate-400">
+            <div className="flex justify-between items-center border-y border-solid border-slate-800 px-6 w-full text-slate-400">
                 <div className="flex flex-row-reverse w-2/6 justify-end items-center">
                     <h2 className="text-xl text-left">Name</h2>
 
@@ -24,7 +24,7 @@ export const FetchedTokens = ({ filteredTokens, perPage, page }) => {
                 .map((token, index) => (
                     <Link
                         key={token.id}
-                        className="flex flex-col items-center w-full border-b border-slate-800 hover:bg-slate-800"
+                        className="flex flex-col items-center w-full border-b border-solid border-slate-800 hover:bg-slate-800"
                         href={`/tokens/${token.id}`}
                     >
                         <div className="flex  justify-between items-center p-6 w-full h-24">

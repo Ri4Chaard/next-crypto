@@ -31,6 +31,7 @@ export default function () {
     const [fetchToken, isTokLoading, tokError] = useFetching(async (url) => {
         const response = await axios.get(url);
         setToken(response.data);
+        setTotalPages(getPageCount(response.data.tickers.length, perPage));
     });
     const [fetchMarketCharts, isMarketChartsLoading, marketChartsError] =
         useFetching(async (url) => {
@@ -52,7 +53,7 @@ export default function () {
 
     useEffect(() => {
         setPage(1);
-        setTotalPages(getPageCount(100, perPage));
+        if (token) setTotalPages(getPageCount(token.tickers.length, perPage));
     }, [perPage]);
 
     const changePage = (page) => {
@@ -62,18 +63,18 @@ export default function () {
     return (
         <MainContainer>
             {isTokLoading ? (
-                <div className="flex flex-col p-3 border-x border-b rounded-b border-cyan-600">
+                <div className="flex flex-col p-3 border-x border-b border-solid rounded-b border-cyan-600">
                     <Loader />
                 </div>
             ) : (
                 <>
                     {tokError && (
-                        <h2 className="flex justify-center items-center text-3xl h-96 border-x border-b border-cyan-600 rounded-b">
+                        <h2 className="flex justify-center items-center text-3xl h-96 border-x border-b border-solid border-cyan-600 rounded-b">
                             {tokError.message}
                         </h2>
                     )}
                     {token && (
-                        <div className="border-x border-b rounded border-cyan-600 p-3 mb-28">
+                        <div className="border-x border-b border-solid rounded border-cyan-600 p-3 mb-28">
                             <div className="flex justify-between ">
                                 <h1 className="text-3xl">
                                     {token.name}
@@ -88,7 +89,7 @@ export default function () {
                                     />
                                 </div>
                             </div>
-                            <div className="flex justify-between border-b border-cyan-600 pb-2 mb-3">
+                            <div className="flex justify-between border-b border-solid border-cyan-600 pb-2 mb-3">
                                 <div className="flex flex-col w-1/3">
                                     <img
                                         className="w-24 h-24 mb-3"
@@ -157,7 +158,7 @@ export default function () {
                                         <div className="flex flex-wrap items-center w-2/3">
                                             {token.categories.map(
                                                 (category) => (
-                                                    <span className="text-xs m-1 p-1 bg-cyan-600 border border-cyan-600 rounded-lg">
+                                                    <span className="text-xs m-1 p-1 bg-cyan-600 border border-solid border-cyan-600 rounded-lg">
                                                         {category}
                                                     </span>
                                                 )
@@ -220,7 +221,7 @@ export default function () {
                                     <div className="flex items-center">
                                         <p className="pr-2">Show rows:</p>
                                         <select
-                                            className="p-1 border rounded border-cyan-600"
+                                            className="p-1 border border-solid rounded border-cyan-600"
                                             name="count"
                                             onChange={(e) =>
                                                 setPerPage(e.target.value)
@@ -248,7 +249,7 @@ export default function () {
                                     perPage={perPage}
                                     page={page}
                                 />
-                                <div className="flex items-center justify-between border-y border-cyan-600 px-4 py-3 mb-3 sm:px-6">
+                                <div className="flex items-center justify-between border-y border-solid border-cyan-600 px-4 py-3 mb-3 sm:px-6">
                                     <Pagination
                                         curPage={page}
                                         changePage={changePage}
