@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Link from "next/link";
-import styles from "../styles/menu.module.scss";
 
 export const MainContainer = ({ children }) => {
     return (
