@@ -197,10 +197,18 @@ export default function () {
                                     {isMarketChartsLoading ? (
                                         <Loader />
                                     ) : (
-                                        <MarketChart
-                                            prices={marketCharts.prices}
-                                            token={token.name}
-                                        />
+                                        <>
+                                            {marketChartsError ? (
+                                                <div className="flex justify-center items-center h-96 text-3xl text-red-700">
+                                                    {marketChartsError.message}
+                                                </div>
+                                            ) : (
+                                                <MarketChart
+                                                    prices={marketCharts.prices}
+                                                    token={token.name}
+                                                />
+                                            )}
+                                        </>
                                     )}
                                 </div>
                             </div>
