@@ -9,6 +9,13 @@ import { MarketChart } from "../../components/MarketChart";
 import { Refresher } from "../../components/Refresher";
 import { getPageCount } from "../../hooks/usePagination";
 import { Pagination } from "../../components/Pagination";
+import {
+    ArrowDownRightIcon,
+    ArrowUpRightIcon,
+    ChevronDoubleDownIcon,
+    ChevronDoubleUpIcon,
+    HomeIcon,
+} from "@heroicons/react/20/solid";
 
 export default function () {
     const [token, setToken] = useState();
@@ -83,36 +90,84 @@ export default function () {
                             <div className="flex justify-between border-b border-cyan-600 pb-2 mb-3">
                                 <div className="flex flex-col w-1/3">
                                     <img
-                                        className="w-24 h-24"
+                                        className="w-24 h-24 mb-3"
                                         src={token.image.large}
                                     />
-                                    <p className="text-3xl mr-3">
-                                        ${token.market_data.current_price.usd}
-                                    </p>
-                                    <p>
-                                        {token.market_data.price_change_percentage_24h.toFixed(
-                                            2
+                                    <div className="flex items-center mb-3">
+                                        <p className="text-3xl mr-2">
+                                            $
+                                            {
+                                                token.market_data.current_price
+                                                    .usd
+                                            }
+                                        </p>
+                                        {token.market_data
+                                            .price_change_percentage_24h < 0 ? (
+                                            <ArrowDownRightIcon className="w-5 h-5 text-red-700" />
+                                        ) : (
+                                            <ArrowUpRightIcon className="w-5 h-5 text-green-700" />
                                         )}
-                                        %{"(24h)"}
-                                    </p>
-                                    <p>
-                                        High 24h: $
-                                        {token.market_data.high_24h.usd}
-                                    </p>
-                                    <p>
-                                        Low 24h: $
-                                        {token.market_data.low_24h.usd}
-                                    </p>
-                                    <div className="flex flex-wrap items-center w-2/3 mb-3">
-                                        {token.categories.map((category) => (
-                                            <span className="text-xs m-1 p-1 bg-cyan-600 border border-cyan-600 rounded-lg">
-                                                {category}
-                                            </span>
-                                        ))}
+                                        <p
+                                            className={
+                                                token.market_data
+                                                    .price_change_percentage_24h <
+                                                0
+                                                    ? "text-red-700"
+                                                    : "text-green-700"
+                                            }
+                                        >
+                                            {token.market_data.price_change_percentage_24h.toFixed(
+                                                4
+                                            )}
+                                            %{" (24h)"}
+                                        </p>
+                                    </div>
+                                    <div className="mb-3">
+                                        <p className="text-slate-400">
+                                            Highest & Lowest {" (24h)"}
+                                        </p>
+                                        <div className="flex">
+                                            <div className="flex items-center mr-1 text-green-700">
+                                                <ChevronDoubleUpIcon className="w-5 h-5" />
+                                                <p>
+                                                    $
+                                                    {
+                                                        token.market_data
+                                                            .high_24h.usd
+                                                    }
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center text-red-700">
+                                                <ChevronDoubleDownIcon className="w-5 h-5" />
+                                                <p>
+                                                    $
+                                                    {
+                                                        token.market_data
+                                                            .low_24h.usd
+                                                    }
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="mb-3">
+                                        <p className="text-slate-400">
+                                            Categories
+                                        </p>
+                                        <div className="flex flex-wrap items-center w-2/3">
+                                            {token.categories.map(
+                                                (category) => (
+                                                    <span className="text-xs m-1 p-1 bg-cyan-600 border border-cyan-600 rounded-lg">
+                                                        {category}
+                                                    </span>
+                                                )
+                                            )}
+                                        </div>
                                     </div>
                                     {token.platforms.ethereum && (
                                         <div className="mb-3">
-                                            <p>Contract</p>
+                                            <p className="text-slate-400">
+                                                Contract
+                                            </p>
                                             <div className="flex items-center">
                                                 <Image
                                                     className="mr-2"
@@ -121,14 +176,14 @@ export default function () {
                                                     height={20}
                                                     alt="eth"
                                                 />
-                                                <p className="text-xs text-slate-400">
+                                                <p className="text-xs">
                                                     {token.platforms.ethereum}
                                                 </p>
                                             </div>
                                         </div>
                                     )}
-                                    <div>
-                                        Homepage:
+                                    <div className="flex items-center">
+                                        <HomeIcon className="w-5 h-5 mr-2 text-slate-400" />
                                         <a
                                             href={token.links.homepage[0]}
                                             target="_blank"
