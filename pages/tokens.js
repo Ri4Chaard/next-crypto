@@ -94,11 +94,11 @@ const Tokens = () => {
                 </div>
             ) : (
                 <>
-                    <div className="flex items-center border-x justify-between border-cyan-600 text-cyan-600 p-3 pb-6">
+                    <div className="flex items-center border-x justify-between border-cyan-600 text-white p-3 pb-6">
                         <div className="flex items-center">
-                            <p className="pr-2">Tokens per page:</p>
+                            <p className="mr-2">Show rows:</p>
                             <select
-                                className="p-1 border rounded border-cyan-600"
+                                className="p-1 border rounded border-cyan-600 mr-2"
                                 name="count"
                                 onChange={(e) => setPerPage(e.target.value)}
                             >
@@ -116,13 +116,13 @@ const Tokens = () => {
                         <div className="flex items-center">
                             <p className="pr-2">Search for token</p>
                             <input
-                                className="p-1 border rounded border-cyan-600"
+                                className="p-1 border rounded border-cyan-600 mr-2"
                                 value={filter}
                                 onChange={handleFilterInput}
                                 placeholder="Type here.."
                             />
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex items-center text-cyan-600">
                             <Refresher
                                 tokError={tokError}
                                 upDate={upDate}
