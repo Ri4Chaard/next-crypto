@@ -313,18 +313,50 @@ export default function () {
                                                     </p>
                                                 </div>
                                                 <div className="flex w-1/5 justify-end">
-                                                    <div
-                                                        className={`p-1 rounded-xl self-center ${
-                                                            ticker.trust_score ==
-                                                            "green"
-                                                                ? `bg-green-700`
-                                                                : `bg-red-700`
-                                                        }`}
-                                                    >
-                                                        <p className="text-slate-950">
-                                                            High
-                                                        </p>
-                                                    </div>
+                                                    {ticker.trust_score ? (
+                                                        <div
+                                                            className={
+                                                                "p-1 rounded-xl self-center w-14 text-center"
+                                                            }
+                                                            style={
+                                                                ticker.trust_score ==
+                                                                "green"
+                                                                    ? {
+                                                                          backgroundColor:
+                                                                              "rgb(21 128 61)",
+                                                                      }
+                                                                    : {
+                                                                          backgroundColor:
+                                                                              ticker.trust_score ==
+                                                                              "yellow"
+                                                                                  ? "rgb(161 98 7)"
+                                                                                  : "rgb(185 28 28",
+                                                                      }
+                                                            }
+                                                        >
+                                                            <p className="text-slate-950">
+                                                                {ticker.trust_score ==
+                                                                    "green" &&
+                                                                    "High"}
+                                                                {ticker.trust_score ==
+                                                                    "yellow" &&
+                                                                    "Mid"}
+                                                                {ticker.trust_score ==
+                                                                    "red" &&
+                                                                    "Low"}
+                                                            </p>
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className={
+                                                                "p-1 rounded-xl self-center w-14 text-center bg-slate-800 "
+                                                            }
+                                                        >
+                                                            <p className="text-slate-950">
+                                                                N/A
+                                                            </p>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </a>
                                         </div>
